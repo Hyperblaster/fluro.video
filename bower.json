@@ -23,7 +23,7 @@
     "angular-resource": "*",
     "fluro.config": "*",
     "fluro.util": "*",
-    "lodash": "*"
+    "lodash": "*",
     "angular-youtube-mb": "~0.1.7"
 
   }
