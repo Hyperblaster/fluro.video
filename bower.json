@@ -1,0 +1,30 @@
+{
+  "name": "fluro.video",
+  "description": "A package of helpful services for interacting with the fluro content api",
+  "homepage": "http://fluro.io",
+  "authors": [
+    "Cade Embery"
+  ],
+  "main": "./dist/fluro.video.min.js",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Hyperblaster/fluro.video.git"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "*",
+    "angular-resource": "*",
+    "fluro.config": "*",
+    "fluro.util": "*",
+    "lodash": "*"
+    "angular-youtube-mb": "~0.1.7"
+
+  }
+}
