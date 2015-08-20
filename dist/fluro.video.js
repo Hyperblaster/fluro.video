@@ -150,6 +150,12 @@ angular.module('fluro.video')
 
     controller.parseVideoURL = function(url) {
 
+        function contains(str, substr) {
+                return (str.indexOf(substr) > -1);
+            }
+
+        //////////////////////////////////////
+
         function getParm(url, base) {
             var re = new RegExp("(\\?|&)" + base + "\\=([^&]*)(&|$)");
             var matches = url.match(re);
@@ -160,8 +166,13 @@ angular.module('fluro.video')
             }
         }
 
+        //////////////////////////////////////
+
         var retVal = {};
         var matches;
+
+        //////////////////////////////////////
+
 
         if (url.indexOf("youtube.com/watch") != -1) {
             retVal.provider = "youtube";
@@ -169,7 +180,39 @@ angular.module('fluro.video')
         } else if (matches = url.match(/vimeo.com\/(\d+)/)) {
             retVal.provider = "vimeo";
             retVal.id = matches[1];
+        } else {
+
+            var youtubeRegexp = /https?:\/\/(?:[0-9A-Z-]+\.)?(?:youtu\.be\/|youtube(?:-nocookie)?\.com\S*[^\w\s-])([\w-]{11})(?=[^\w-]|$)(?![?=&+%\w.-]*(?:['"][^<>]*>|<\/a>))[?=&+%\w.-]*/ig;
+
+            //Get the id
+            var YoutubeID = url.replace(youtubeRegexp, '$1');
+
+            if (contains(YoutubeID, ';')) {
+                var pieces = YoutubeID.split(';');
+
+                if (contains(pieces[1], '%')) {
+                    // links like this:
+                    // "http://www.youtube.com/attribution_link?a=pxa6goHqzaA&amp;u=%2Fwatch%3Fv%3DdPdgx30w9sU%26feature%3Dshare"
+                    // have the real query string URI encoded behind a ';'.
+                    // at this point, `YoutubeID is 'pxa6goHqzaA;u=%2Fwatch%3Fv%3DdPdgx30w9sU%26feature%3Dshare'
+                    var uriComponent = decodeURIComponent(YoutubeID.split(';')[1]);
+                    YoutubeID = ('http://youtube.com' + uriComponent)
+                        .replace(youtubeRegexp, '$1');
+                } else {
+                    // https://www.youtube.com/watch?v=VbNF9X1waSc&amp;feature=youtu.be
+                    // `YoutubeID` looks like 'VbNF9X1waSc;feature=youtu.be' currently.
+                    // strip the ';feature=youtu.be'
+                    YoutubeID = pieces[0];
+                }
+            } else if (contains(YoutubeID, '#')) {
+                // YoutubeID might look like '93LvTKF_jW0#t=1'
+                // and we want '93LvTKF_jW0'
+                YoutubeID = YoutubeID.split('#')[0];
+            }
+            retVal.provider = "youtube";
+            retVal.id = YoutubeID;
         }
+        
 
         console.log('Video thumb', url, retVal);
         return (retVal);
