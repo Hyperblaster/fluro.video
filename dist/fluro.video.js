@@ -170,6 +170,8 @@ angular.module('fluro.video')
             retVal.provider = "vimeo";
             retVal.id = matches[1];
         }
+
+        console.log('Video thumb', url, retVal);
         return (retVal);
     }
 
