@@ -25,6 +25,8 @@ angular.module('fluro.video')
         },
         link: function($scope, $element, $attrs) {
 
+
+           
             $scope.params = $scope.ngParams();
 
             if (!$scope.params) {
@@ -46,6 +48,8 @@ angular.module('fluro.video')
             ///////////////////////////
 
             var template;
+
+
 
             switch ($scope.model.assetType) {
                 case 'youtube':
