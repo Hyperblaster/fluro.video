@@ -214,7 +214,7 @@ angular.module('fluro.video')
         }
 
 
-        console.log('Video thumb', url, retVal);
+        //console.log('Video thumb', url, retVal);
         return (retVal);
     }
 
