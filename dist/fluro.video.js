@@ -26,49 +26,52 @@ angular.module('fluro.video')
         link: function($scope, $element, $attrs) {
 
 
-           
-            $scope.params = $scope.ngParams();
+            $scope.$watch('model', function() {
+                $scope.params = $scope.ngParams();
 
-            if (!$scope.params) {
-                $scope.params = {
-                    controls: 0,
-                    autoplay: 0,
-                    modestbranding: 1,
-                    playsinline: 1,
-                    showinfo: 0,
-                    theme: 'light',
-                    byline: 0,
-                    portrait: 0,
-                    title: 0
+                if (!$scope.params) {
+                    $scope.params = {
+                        controls: 0,
+                        autoplay: 0,
+                        modestbranding: 1,
+                        playsinline: 1,
+                        showinfo: 0,
+                        theme: 'light',
+                        byline: 0,
+                        portrait: 0,
+                        title: 0
+                    }
                 }
-            }
 
 
 
-            ///////////////////////////
+                ///////////////////////////
 
-            var template;
+                var template;
 
+                //Clear element
+                $element.empty();
 
+                switch ($scope.model.assetType) {
+                    case 'youtube':
+                        template = '<div class="embed-responsive embed-responsive-16by9"><youtube-video class="embed-responsive-item" video-url="model.external.youtube" player-vars="params"/></div>';
+                        break;
+                    case 'vimeo':
+                        template = '<div class="embed-responsive embed-responsive-16by9"><vimeo-video class="embed-responsive-item" video-url="model.external.vimeo" player-vars="params"/></div>';
+                        break;
+                    case 'upload':
+                        $scope.playUrl = Fluro.apiURL + '/get/' + $scope.model._id;
+                        template = '<div class="embed-responsive embed-responsive-16by9"><video class="embed-responsive-item" controls><source ng-src="{{playUrl | trustfluro}}" type="{{model.mimetype}}"></video></div>';
+                        break;
+                }
 
-            switch ($scope.model.assetType) {
-                case 'youtube':
-                    template = '<div class="embed-responsive embed-responsive-16by9"><youtube-video class="embed-responsive-item" video-url="model.external.youtube" player-vars="params"/></div>';
-                    break;
-                case 'vimeo':
-                    template = '<div class="embed-responsive embed-responsive-16by9"><vimeo-video class="embed-responsive-item" video-url="model.external.vimeo" player-vars="params"/></div>';
-                    break;
-                case 'upload':
-                    $scope.playUrl = Fluro.apiURL + '/get/' + $scope.model._id;
-                    template = '<div class="embed-responsive embed-responsive-16by9"><video class="embed-responsive-item" controls><source ng-src="{{playUrl | trustfluro}}" type="{{model.mimetype}}"></video></div>';
-                    break;
-            }
+                //Create the template
+                if (template) {
+                    var cTemplate = $compile(template)($scope);
+                    $element.append(cTemplate);
+                }
 
-            //Create the template
-            if (template) {
-                var cTemplate = $compile(template)($scope);
-                $element.append(cTemplate);
-            }
+            })
         },
 
 
@@ -94,6 +97,106 @@ angular.module('fluro.video')
     // var urlString = $fluro_url + '/get/' + $scope.id;
 
     //$scope.url = urlString;
+})
+
+
+
+
+.service('VideoTools', function($http) {
+
+    var controller = {}
+
+    /////////////////////////////////////////////////////
+
+    controller.getVideoThumbnail = function(item) {
+
+        var url;
+
+        if (item) {
+            switch (item.assetType) {
+                case 'youtube':
+                    var details = controller.parseVideoURL(item.external.youtube);
+                    url = 'http://img.youtube.com/vi/' + details.id + '/default.jpg';
+                    break;
+                case 'vimeo':
+                    var id = controller.getVimeoID(item.external.vimeo);
+
+                    $http.get("http://vimeo.com/api/v2/video/" + id + ".json", {
+                        withCredentials: false
+                    }).then(function(res) {
+                        url = res.data[0].thumbnail_small;
+                    })
+                    break;
+                case 'upload':
+                    break;
+            }
+        }
+
+        return url;
+    }
+
+    /////////////////////////////////////////////////////
+
+    controller.getVimeoID = function(url) {
+        //Vimeo RegExp
+        var reg = /https?:\/\/(?:www\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|)(\d+)(?:$|\/|\?)/;
+        var match = url.match(reg);
+        if (match) {
+            return match[3];
+        }
+    }
+
+    /////////////////////////////////////////////////////
+
+    controller.parseVideoURL = function(url) {
+
+        function getParm(url, base) {
+            var re = new RegExp("(\\?|&)" + base + "\\=([^&]*)(&|$)");
+            var matches = url.match(re);
+            if (matches) {
+                return (matches[2]);
+            } else {
+                return ("");
+            }
+        }
+
+        var retVal = {};
+        var matches;
+
+        if (url.indexOf("youtube.com/watch") != -1) {
+            retVal.provider = "youtube";
+            retVal.id = getParm(url, "v");
+        } else if (matches = url.match(/vimeo.com\/(\d+)/)) {
+            retVal.provider = "vimeo";
+            retVal.id = matches[1];
+        }
+        return (retVal);
+    }
+
+    /////////////////////////////////////////////////////
+
+    return controller;
+})
+
+
+.directive('videoThumbnail', function() {
+
+    return {
+        restrict: 'E',
+        replace: true,
+        // Replace the div with our template
+        scope: {
+            model: '=ngModel',
+        },
+        template: '<span><img ng-src="{{thumbnailUrl}}"/></span>',
+        controller: function($scope, $http, VideoTools) {
+            $scope.$watch('model', function() {
+                if ($scope.model) {
+                    $scope.thumbnailUrl = VideoTools.getVideoThumbnail($scope.model);
+                }
+            })
+        }
+    };
 });
 'use strict';
 
