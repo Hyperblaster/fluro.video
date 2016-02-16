@@ -264,7 +264,9 @@ angular.module('fluro.video')
                 if (newUrl != oldUrl) {
                     if (newUrl) {
                         console.log('TEST URL', newUrl);
-                        $scope.thumbnail.url = newUrl;
+                        if(String($scope.thumbnail.url) != String(newUrl)) {
+                            $scope.thumbnail.url = String(newUrl);
+                        };
                     }
                 }
 
