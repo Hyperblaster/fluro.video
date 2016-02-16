@@ -125,6 +125,7 @@ angular.module('fluro.video')
                     return res.data[0].thumbnail_small;
 
                 })
+
                 break;
             case 'upload':
                 return;
@@ -230,12 +231,23 @@ angular.module('fluro.video')
         scope: {
             model: '=ngModel',
         },
-        template: '<span><img ng-src="{{thumbnailUrl}}"/></span>',
+        template: '<span><img ng-src="{{thumbnail.url}}"/></span>',
         controller: function($scope, $http, VideoTools) {
+
+            $scope.thumbnail = {};
+
 
             $scope.$watch('model', function(model) {
                 if (model) {
-                    $scope.thumbnailUrl = VideoTools.getVideoThumbnail(model);
+
+                    var url = VideoTools.getVideoThumbnail(model);
+
+                    console.log('TEST URL', url);
+
+                    if(url) {
+                        $scope.thumbnail.url = url;
+                    }
+                    //$scope.thumbnailUrl = VideoTools.getVideoThumbnail(model);
                 }
             })
 
