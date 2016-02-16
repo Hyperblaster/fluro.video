@@ -116,12 +116,12 @@ angular.module('fluro.video')
             switch (item.assetType) {
                 case 'youtube':
                     var details = controller.parseVideoURL(item.external.youtube);
-                    url = '//img.youtube.com/vi/' + details.id + '/mqdefault.jpg';
+                    url = 'https://img.youtube.com/vi/' + details.id + '/mqdefault.jpg';
                     break;
                 case 'vimeo':
                     var id = controller.getVimeoID(item.external.vimeo);
 
-                    $http.get("//vimeo.com/api/v2/video/" + id + ".json", {
+                    $http.get("https://vimeo.com/api/v2/video/" + id + ".json", {
                         withCredentials: false
                     }).then(function(res) {
                         url = res.data[0].thumbnail_small;
