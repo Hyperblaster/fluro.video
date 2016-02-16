@@ -106,31 +106,37 @@ angular.module('fluro.video')
 
     var controller = {}
 
+
+    var url;
+
     /////////////////////////////////////////////////////
 
     controller.getVideoThumbnail = function(item) {
 
-        var url;
+        if (!url || !url.length) {
+            if (item) {
+                switch (item.assetType) {
+                    case 'youtube':
+                        var details = controller.parseVideoURL(item.external.youtube);
+                        url = 'https://img.youtube.com/vi/' + details.id + '/mqdefault.jpg';
+                        return url;
+                        break;
+                    case 'vimeo':
+                        var id = controller.getVimeoID(item.external.vimeo);
 
-        if (item) {
-            switch (item.assetType) {
-                case 'youtube':
-                    var details = controller.parseVideoURL(item.external.youtube);
-                    url = 'https://img.youtube.com/vi/' + details.id + '/mqdefault.jpg';
-                    break;
-                case 'vimeo':
-                    var id = controller.getVimeoID(item.external.vimeo);
-
-                    $http.get("https://vimeo.com/api/v2/video/" + id + ".json", {
-                        withCredentials: false
-                    }).then(function(res) {
-                        url = res.data[0].thumbnail_small;
-                    })
-                    break;
-                case 'upload':
-                    break;
+                        $http.get("https://vimeo.com/api/v2/video/" + id + ".json", {
+                            withCredentials: false
+                        }).then(function(res) {
+                            console.log('Got url')
+                            url = res.data[0].thumbnail_small;
+                        })
+                        break;
+                    case 'upload':
+                        break;
+                }
             }
         }
+
 
         return url;
     }
@@ -151,8 +157,8 @@ angular.module('fluro.video')
     controller.parseVideoURL = function(url) {
 
         function contains(str, substr) {
-                return (str.indexOf(substr) > -1);
-            }
+            return (str.indexOf(substr) > -1);
+        }
 
         //////////////////////////////////////
 
