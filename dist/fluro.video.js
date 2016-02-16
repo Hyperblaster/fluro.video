@@ -129,7 +129,8 @@ angular.module('fluro.video')
                 break;
             case 'vimeo':
                 var id = controller.getVimeoID(item.external.vimeo);
-
+                return;
+                /*
                 $http.get("https://vimeo.com/api/v2/video/" + id + ".json", {
                     withCredentials: false
                 }).then(function(res) {
@@ -141,6 +142,7 @@ angular.module('fluro.video')
                         }
                     }
                 })
+                */
 
                 break;
             case 'upload':
@@ -250,28 +252,18 @@ angular.module('fluro.video')
         scope: {
             model: '=ngModel',
         },
-        template: '<span><img ng-src="{{thumbnail.url}}"/></span>',
+        template: '<span><img ng-src="{{thumbnailUrl}}"/></span>',
         controller: function($scope, $http, VideoTools) {
 
-            $scope.thumbnail = {
-                url: ''
-            };
+            
 
 
-            $scope.$watch(function() {
-                return VideoTools.getVideoThumbnail($scope.model);
-            }, function(newUrl, oldUrl) {
-                if (newUrl != oldUrl) {
-                    if (newUrl) {
-                        console.log('TEST URL', newUrl);
-                        if(String($scope.thumbnail.url) != String(newUrl)) {
-                            $scope.thumbnail.url = String(newUrl);
-                        };
-                    }
+            $scope.$watch('model', function(model) {
+                if(model) {
+                    $scope.thumbnailUrl = VideoTools.getVideoThumbnail(model);
                 }
-
-            })
-
+            });
+            
 
         }
     };
