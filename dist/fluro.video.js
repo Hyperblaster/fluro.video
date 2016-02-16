@@ -243,13 +243,16 @@ angular.module('fluro.video')
         scope: {
             model: '=ngModel',
         },
-        template: '<span><img ng-src="{{thumbnailUrl}}"/></span>',
+        template: '<span><img ng-src="{{getThumbnail()}}"/></span>',
         controller: function($scope, $http, VideoTools) {
-            $scope.$watch('model', function() {
-                if ($scope.model) {
-                    $scope.thumbnailUrl = VideoTools.getVideoThumbnail($scope.model);
+
+
+            $scope.getThumbnail = function() {
+                if($scope.model) {
+                    return VideoTools.getVideoThumbnail($scope.model);
                 }
-            })
+            }
+           
         }
     };
 });
