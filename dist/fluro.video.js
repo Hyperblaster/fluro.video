@@ -253,7 +253,9 @@ angular.module('fluro.video')
         template: '<span><img ng-src="{{thumbnail.url}}"/></span>',
         controller: function($scope, $http, VideoTools) {
 
-            $scope.thumbnail = {};
+            $scope.thumbnail = {
+                url:''
+            };
 
 
             $scope.$watch('model', function(model) {
