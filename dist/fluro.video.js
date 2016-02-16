@@ -106,37 +106,15 @@ angular.module('fluro.video')
 
     var controller = {}
 
-
-
     /////////////////////////////////////////////////////
-    
-
-    var thumbCache = {};
-
     /////////////////////////////////////////////////////
 
-    controller.getVideoThumbnail = function(item, done) {
-        if(!done) {
-            done = function() {
+    controller.getVideoThumbnail = function(item) {
 
-            }
-        }
-        if (!item || !item._id) {
-            return done('No video specified');
-        }
-
-
-        if(thumbCache[item._id]) {
-            return done(null, thumbCache[item._id]);
-        }
-
-        
         switch (item.assetType) {
             case 'youtube':
                 var details = controller.parseVideoURL(item.external.youtube);
-                thumbCache[item._id] = 'https://img.youtube.com/vi/' + details.id + '/mqdefault.jpg';
-
-                return done(null, thumbCachethumbCache[item._id]);
+                return 'https://img.youtube.com/vi/' + details.id + '/mqdefault.jpg';
                 break;
             case 'vimeo':
                 var id = controller.getVimeoID(item.external.vimeo);
@@ -144,12 +122,12 @@ angular.module('fluro.video')
                 $http.get("https://vimeo.com/api/v2/video/" + id + ".json", {
                     withCredentials: false
                 }).then(function(res) {
-                    thumbCache[item._id] = res.data[0].thumbnail_small;
-                    return done(null, thumbCachethumbCache[item._id]);
+                    return res.data[0].thumbnail_small;
+
                 })
                 break;
             case 'upload':
-                return done('No thumbnails available for uploaded videos');
+                return;
                 break;
         }
     }
@@ -257,7 +235,7 @@ angular.module('fluro.video')
 
             $scope.$watch('model', function(model) {
 
-                if(model) {
+                if (model) {
 
                     VideoTools.getVideoThumbnail(model, function(err, url) {
 
@@ -268,8 +246,8 @@ angular.module('fluro.video')
                     //model.thumbnailUrl = 
                 }
             })
-            
-           
+
+
         }
     };
 });
