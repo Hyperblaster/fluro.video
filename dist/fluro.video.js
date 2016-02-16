@@ -106,6 +106,13 @@ angular.module('fluro.video')
 
     var controller = {}
 
+
+
+    /////////////////////////////////////////////////////
+    
+
+    var thumbCache = {};
+
     /////////////////////////////////////////////////////
 
     controller.getVideoThumbnail = function(item) {
@@ -114,10 +121,15 @@ angular.module('fluro.video')
             return;
         }
 
+        if(thumbCache[item._id]) {
+            return thumbCache[item._id];
+        }
+
+        
         switch (item.assetType) {
             case 'youtube':
                 var details = controller.parseVideoURL(item.external.youtube);
-                return 'https://img.youtube.com/vi/' + details.id + '/mqdefault.jpg';
+                thumbCache[item._id] = 'https://img.youtube.com/vi/' + details.id + '/mqdefault.jpg';
                 break;
             case 'vimeo':
                 var id = controller.getVimeoID(item.external.vimeo);
@@ -125,12 +137,15 @@ angular.module('fluro.video')
                 $http.get("https://vimeo.com/api/v2/video/" + id + ".json", {
                     withCredentials: false
                 }).then(function(res) {
-                    return res.data[0].thumbnail_small;
+                    thumbCache[item._id] = res.data[0].thumbnail_small;
                 })
                 break;
             case 'upload':
                 break;
         }
+
+
+        return thumbCache[item._id];
     }
 
     /////////////////////////////////////////////////////
@@ -234,10 +249,12 @@ angular.module('fluro.video')
         template: '<span><img ng-src="{{thumbnailUrl}}"/></span>',
         controller: function($scope, $http, VideoTools) {
 
-            $scope.$watch('model', function(model) {
-                if(model) {
-                    $scope.thumbnailUrl = VideoTools.getVideoThumbnail(model);
+            $scope.$watch(function() {
+                if($scope.model) {
+                    return VideoTools.getVideoThumbnail($scope.model);
                 }
+            }, function(url) {
+                $scope.thumbnailUrl = url;
             })
             
            
