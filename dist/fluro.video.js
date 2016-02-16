@@ -114,11 +114,11 @@ angular.module('fluro.video')
 
     controller.getVideoThumbnail = function(item) {
 
-        if(!item || !item._id) {
+        if (!item || !item._id) {
             return;
         }
 
-        if(cache[item._id]) {
+        if (cache[item._id]) {
             return cache[item._id];
         }
 
@@ -134,9 +134,9 @@ angular.module('fluro.video')
                     withCredentials: false
                 }).then(function(res) {
 
-                    if(String(res.status) == '200') {
+                    if (String(res.status) == '200') {
 
-                        if(res.data && res.data[0] && res.data[0] && res.data[0].thumbnail_small) {
+                        if (res.data && res.data[0] && res.data[0] && res.data[0].thumbnail_small) {
                             cache[item._id] = res.data[0].thumbnail_small;
                         }
                     }
@@ -258,18 +258,14 @@ angular.module('fluro.video')
             };
 
 
-            $scope.$watch('model', function(model) {
-                if (model) {
-
-                    var url = VideoTools.getVideoThumbnail(model);
-
-                    console.log('TEST URL', url);
-
-                    if(url) {
-                        $scope.thumbnail.url = url;
-                    }
-                    //$scope.thumbnailUrl = VideoTools.getVideoThumbnail(model);
+            $scope.$watch(function() {
+                return VideoTools.getVideoThumbnail($scope.model);
+            }, function(url) {
+                console.log('TEST URL', url);
+                if (url) {
+                    $scope.thumbnail.url = url;
                 }
+
             })
 
 
