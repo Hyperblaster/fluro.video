@@ -254,16 +254,18 @@ angular.module('fluro.video')
         controller: function($scope, $http, VideoTools) {
 
             $scope.thumbnail = {
-                url:''
+                url: ''
             };
 
 
             $scope.$watch(function() {
                 return VideoTools.getVideoThumbnail($scope.model);
-            }, function(url) {
-                console.log('TEST URL', url);
-                if (url) {
-                    $scope.thumbnail.url = url;
+            }, function(newUrl, oldUrl) {
+                if (newUrl != oldUrl) {
+                    if (url) {
+                        console.log('TEST URL', url);
+                        $scope.thumbnail.url = url;
+                    }
                 }
 
             })
