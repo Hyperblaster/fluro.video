@@ -107,19 +107,19 @@ angular.module('fluro.video')
     var controller = {}
 
 
-    var url;
+    
 
     /////////////////////////////////////////////////////
 
     controller.getVideoThumbnail = function(item) {
 
-        if (!url || !url.length) {
+
+        if (!item.videoThumbnailUrl || !item.videoThumbnailUrl.length) {
             if (item) {
                 switch (item.assetType) {
                     case 'youtube':
                         var details = controller.parseVideoURL(item.external.youtube);
-                        url = 'https://img.youtube.com/vi/' + details.id + '/mqdefault.jpg';
-                        return url;
+                        item.videoThumbnailUrl = 'https://img.youtube.com/vi/' + details.id + '/mqdefault.jpg';
                         break;
                     case 'vimeo':
                         var id = controller.getVimeoID(item.external.vimeo);
@@ -128,7 +128,7 @@ angular.module('fluro.video')
                             withCredentials: false
                         }).then(function(res) {
                             console.log('Got url')
-                            url = res.data[0].thumbnail_small;
+                            item.videoThumbnailUrl = res.data[0].thumbnail_small;
                         })
                         break;
                     case 'upload':
@@ -138,7 +138,7 @@ angular.module('fluro.video')
         }
 
 
-        return url;
+        return item.videoThumbnailUrl;
     }
 
     /////////////////////////////////////////////////////
