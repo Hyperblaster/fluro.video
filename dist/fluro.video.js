@@ -249,12 +249,19 @@ angular.module('fluro.video')
         template: '<span><img ng-src="{{thumbnailUrl}}"/></span>',
         controller: function($scope, $http, VideoTools) {
 
+            $scope.thumbnailUrl = '';
+
             $scope.$watch(function() {
                 if($scope.model) {
-                    return VideoTools.getVideoThumbnail($scope.model);
+                    var string = VideoTools.getVideoThumbnail($scope.model);
+                    console.log('Got String', string);
+                    return String(string);
                 }
-            }, function(url) {
-                $scope.thumbnailUrl = url;
+            }, function(newUrl, oldUrl) {
+
+                if(newUrl != oldUrl) {
+                    $scope.thumbnailUrl = url;
+                }
             })
             
            
