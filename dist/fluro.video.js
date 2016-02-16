@@ -122,6 +122,10 @@ angular.module('fluro.video')
         if (videoThumbnailCache[item._id]) {
             return videoThumbnailCache[item._id];
         }
+
+        //String
+        videoThumbnailCache[item._id] = '';
+
         switch (item.assetType) {
             case 'youtube':
                 var details = controller.parseVideoURL(item.external.youtube);
