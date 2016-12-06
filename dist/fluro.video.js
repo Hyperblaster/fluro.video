@@ -12,7 +12,7 @@ angular.module('fluro.video', [
 angular.module('fluro.video')
 
 
-.directive('fluroVideo', function($compile, Fluro) {
+.directive('fluroVideo', ['$compile', 'Fluro', function($compile, Fluro) {
 
     return {
         restrict: 'E',
@@ -76,7 +76,7 @@ angular.module('fluro.video')
 
 
     };
-})
+}])
 
 
 .filter('trustfluro', ['$sce',
@@ -89,7 +89,7 @@ angular.module('fluro.video')
 
 /////////////////////////////////////////////////////
 
-.controller('FluroVideoController', function($scope) {
+.controller('FluroVideoController', ['$scope', function($scope) {
 
 
 
@@ -97,12 +97,12 @@ angular.module('fluro.video')
     // var urlString = $fluro_url + '/get/' + $scope.id;
 
     //$scope.url = urlString;
-})
+}])
 
 
 
 
-.service('VideoTools', function($http) {
+.service('VideoTools', ['$http', function($http) {
 
     var controller = {}
 
@@ -240,7 +240,7 @@ angular.module('fluro.video')
     /////////////////////////////////////////////////////
 
     return controller;
-})
+}])
 
 
 .directive('videoThumbnail', function() {
@@ -253,7 +253,7 @@ angular.module('fluro.video')
             model: '=ngModel',
         },
         template: '<span><img ng-src="{{thumbnailUrl}}"/></span>',
-        controller: function($scope, $http, VideoTools) {
+        controller: ['$scope', '$http', 'VideoTools', function($scope, $http, VideoTools) {
 
             
 
@@ -265,13 +265,13 @@ angular.module('fluro.video')
             });
             
 
-        }
+        }]
     };
 });
 'use strict';
 
 angular.module('fluro.video')
-.service('VimeoEmbedSettings', function($http) {
+.service('VimeoEmbedSettings', ['$http', function($http) {
 
     var controller = {};
 
@@ -284,8 +284,8 @@ angular.module('fluro.video')
     /////////////////////////
 
     return controller;
-})
-    .directive('vimeoVideo', function($compile, VimeoEmbedSettings) {
+}])
+    .directive('vimeoVideo', ['$compile', 'VimeoEmbedSettings', function($compile, VimeoEmbedSettings) {
         return {
             restrict: 'E',
             scope: {
@@ -356,7 +356,7 @@ angular.module('fluro.video')
                 $element.replaceWith(cTemplate);
             }
         };
-    })
+    }])
 
 .filter('trustVimeo', ['$sce',
     function($sce) {
