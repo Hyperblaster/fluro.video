@@ -53,6 +53,9 @@ angular.module('fluro.video').directive('fluroVideo', ['$compile', 'Fluro', func
                     case 'youtube':
                         template = '<div class="embed-responsive embed-responsive-16by9"><youtube-video class="embed-responsive-item" video-url="model.external.youtube" player-vars="params"/></div>';
                         break;
+                    case 'embed':
+                        template = '<div class="embed-responsive embed-responsive-16by9">'+$scope.model.external.embed+'</div>';
+                        break;
                     case 'vimeo':
                         template = '<div class="embed-responsive embed-responsive-16by9"><vimeo-video class="embed-responsive-item" video-url="model.external.vimeo" player-vars="params"/></div>';
                         break;
