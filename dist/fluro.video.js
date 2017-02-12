@@ -256,7 +256,7 @@ angular.module('fluro.video').directive('videoThumbnail', function() {
         controller: ['$scope', '$http', 'Fluro', 'VideoTools', function($scope, $http, Fluro, VideoTools) {
 
             
-
+//test
 
             $scope.$watch('model', function(model) {
                 if(model) {
