@@ -260,7 +260,6 @@ angular.module('fluro.video').directive('videoThumbnail', function() {
 
             $scope.$watch('model', function(model) {
                 if(model) {
-                    console.log('Get asset type', model);
                     switch(model.assetType) {
                         case 'vimeo':
                         case 'youtube':
