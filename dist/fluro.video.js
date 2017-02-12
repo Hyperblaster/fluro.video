@@ -253,14 +253,15 @@ angular.module('fluro.video').directive('videoThumbnail', function() {
             model: '=ngModel',
         },
         template: '<span><img ng-src="{{thumbnailUrl}}"/></span>',
-        controller: ['$scope', '$http', 'VideoTools', function($scope, $http, VideoTools) {
+        controller: ['$scope', '$http', 'Fluro', 'VideoTools', function($scope, $http, Fluro, VideoTools) {
 
             
 
 
             $scope.$watch('model', function(model) {
                 if(model) {
-                    $scope.thumbnailUrl = VideoTools.getVideoThumbnail(model);
+                    $scope.thumbnailUrl = Fluro.apiURL + '/get/' + model._id + '/poster';
+                    // $scope.thumbnailUrl = VideoTools.getVideoThumbnail(model);
                 }
             });
             
