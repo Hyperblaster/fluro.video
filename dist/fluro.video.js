@@ -260,7 +260,13 @@ angular.module('fluro.video').directive('videoThumbnail', function() {
 
             $scope.$watch('model', function(model) {
                 if(model) {
-                    $scope.thumbnailUrl = Fluro.apiURL + '/get/' + model._id + '/poster';
+                    switch(model) {
+                        case 'vimeo':
+                        case 'youtube':
+                            $scope.thumbnailUrl = Fluro.apiURL + '/get/' + model._id + '/poster';
+                        break;
+                    }
+                    
                     // $scope.thumbnailUrl = VideoTools.getVideoThumbnail(model);
                 }
             });
