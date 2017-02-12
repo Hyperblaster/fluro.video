@@ -260,7 +260,7 @@ angular.module('fluro.video').directive('videoThumbnail', function() {
 
             $scope.$watch('model', function(model) {
                 if(model) {
-                    switch(model) {
+                    switch(model.assetType) {
                         case 'vimeo':
                         case 'youtube':
                             $scope.thumbnailUrl = Fluro.apiURL + '/get/' + model._id + '/poster';
