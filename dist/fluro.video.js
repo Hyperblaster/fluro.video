@@ -302,6 +302,9 @@ angular.module('fluro.video').directive('videoThumbnail', function() {
             //test
 
             $scope.$watch('model', function(model) {
+
+                $scope.thumbnailUrl = Fluro.apiURL + '/get/' + model._id + '/poster';
+                /**
                 if (model) {
                     switch (model.assetType) {
                         case 'vimeo':
@@ -312,6 +315,7 @@ angular.module('fluro.video').directive('videoThumbnail', function() {
 
                     // $scope.thumbnailUrl = VideoTools.getVideoThumbnail(model);
                 }
+                /**/
             });
 
 
