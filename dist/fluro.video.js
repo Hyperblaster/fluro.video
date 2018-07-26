@@ -294,28 +294,35 @@ angular.module('fluro.video').directive('videoThumbnail', function() {
         // Replace the div with our template
         scope: {
             model: '=ngModel',
+            options:'='
         },
         template: '<span><img ng-src="{{thumbnailUrl}}"/></span>',
         controller: ['$scope', '$http', 'Fluro', 'VideoTools', function($scope, $http, Fluro, VideoTools) {
 
 
-            //test
-
             $scope.$watch('model', function(model) {
 
-                $scope.thumbnailUrl = Fluro.apiURL + '/get/' + model._id + '/poster';
-                /**
-                if (model) {
-                    switch (model.assetType) {
-                        case 'vimeo':
-                        case 'youtube':
-                            $scope.thumbnailUrl = Fluro.apiURL + '/get/' + model._id + '/poster';
-                            break;
-                    }
+                var params = $scope.options || {};
 
-                    // $scope.thumbnailUrl = VideoTools.getVideoThumbnail(model);
+                ////////////////////////////////////////
+
+                //Create the URL
+                var url = Fluro.apiURL + '/get/' + model._id + '/poster';
+
+                ////////////////////////////////////////
+
+                //Map each parameter as a query string variable
+                var queryParams = _.map(params, function(v, k) {
+                    return encodeURIComponent(k) + '=' + encodeURIComponent(v);
+                }).join('&');
+
+                //If there are query string parameters append them to the url
+                if (queryParams.length) {
+                    url += '?' + queryParams;
                 }
-                /**/
+
+
+                $scope.thumbnailUrl = url;
             });
 
 
