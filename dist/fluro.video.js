@@ -294,27 +294,27 @@ angular.module('fluro.video').directive('videoThumbnail', function() {
         // Replace the div with our template
         scope: {
             model: '=ngModel',
-            options:'='
+            params:'=ngParams',
         },
         template: '<span class="v-t"><img ng-src="{{thumbnailUrl}}"/></span>',
         controller: ['$scope', '$http', 'Fluro', 'VideoTools', function($scope, $http, Fluro, VideoTools) {
 
 
             $scope.$watch('model', update);
-            $scope.$watch('options', update, true);
+            $scope.$watch('params', update, true);
 
             ////////////////////////////////////////////
 
             function update() {
 
-                var params = $scope.options || {};
+                var params = $scope.params || {};
 
                 ////////////////////////////////////////
 
                 if(!$scope.model) {
                     return;
                 }
-                
+
                 //Create the URL
                 var url = Fluro.apiURL + '/get/' + $scope.model._id + '/poster';
 
