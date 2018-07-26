@@ -296,11 +296,16 @@ angular.module('fluro.video').directive('videoThumbnail', function() {
             model: '=ngModel',
             options:'='
         },
-        template: '<span><img ng-src="{{thumbnailUrl}}"/></span>',
+        template: '<span class="v-t"><img ng-src="{{thumbnailUrl}}"/></span>',
         controller: ['$scope', '$http', 'Fluro', 'VideoTools', function($scope, $http, Fluro, VideoTools) {
 
 
-            $scope.$watch('model', function(model) {
+            $scope.$watch('model', update);
+            $scope.$watch('options', update, true);
+
+            ////////////////////////////////////////////
+
+            function update() {
 
                 var params = $scope.options || {};
 
@@ -323,7 +328,7 @@ angular.module('fluro.video').directive('videoThumbnail', function() {
 
 
                 $scope.thumbnailUrl = url;
-            });
+            }
 
 
         }]
