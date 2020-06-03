@@ -28,7 +28,7 @@ angular.module('fluro.video').directive('fluroVideo', ['$compile', 'Fluro', func
 
                 if (!$scope.params) {
                     $scope.params = {
-                        controls: 0,
+                        // controls: 0,
                         autoplay: 0,
                         modestbranding: 1,
                         playsinline: 1,
@@ -61,6 +61,12 @@ angular.module('fluro.video').directive('fluroVideo', ['$compile', 'Fluro', func
                         break;
                     case 'upload':
                         $scope.playUrl = Fluro.apiURL + '/get/' + $scope.model._id;
+
+                        if (Fluro.token) {
+                            $scope.playUrl = $scope.playUrl + '?access_token=' + Fluro.token
+                        }
+
+
                         template = '<div class="embed-responsive embed-responsive-16by9"><video class="embed-responsive-item" controls><source ng-src="{{playUrl | trustfluro}}" type="{{model.mimetype}}"></video></div>';
                         break;
                 }
@@ -250,8 +256,8 @@ angular.module('fluro.video').service('VideoTools', ['$http', function($http) {
 angular.module('fluro.video').filter('videoDuration', function() {
 
 
-    return function (inputSeconds) {
-        if(!inputSeconds) {
+    return function(inputSeconds) {
+        if (!inputSeconds) {
             return '';
         }
 
@@ -270,16 +276,16 @@ angular.module('fluro.video').filter('videoDuration', function() {
             seconds = "0" + seconds;
         }
 
-        if(hours == '00') {
+        if (hours == '00') {
             return minutes + ':' + seconds;
         } else {
             return hours + ':' + minutes + ':' + seconds;
         }
     }
 
-   
-        
-    
+
+
+
 
 });
 
@@ -294,9 +300,9 @@ angular.module('fluro.video').directive('videoThumbnail', function() {
         // Replace the div with our template
         scope: {
             model: '=ngModel',
-            params:'=ngParams',
+            params: '=ngParams',
         },
-        template: '<span class="v-t"><img ng-src="{{thumbnailUrl}}"/></span>',
+        template: '<span><img ng-src="{{thumbnailUrl}}"/></span>',
         controller: ['$scope', '$http', 'Fluro', 'VideoTools', function($scope, $http, Fluro, VideoTools) {
 
 
@@ -311,12 +317,16 @@ angular.module('fluro.video').directive('videoThumbnail', function() {
 
                 ////////////////////////////////////////
 
-                if(!$scope.model) {
+                if (!$scope.model) {
                     return;
                 }
 
                 //Create the URL
                 var url = Fluro.apiURL + '/get/' + $scope.model._id + '/poster';
+
+                if(Fluro.token) {
+                	params.access_token = Fluro.token;
+                }
 
                 ////////////////////////////////////////
 
