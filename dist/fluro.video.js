@@ -3,13 +3,14 @@
 angular.module('fluro.video', [
 	'fluro.config',
     'fluro.util',
+    'fluro.asset',
     'youtube-embed'
 	]);
 'use strict';
 
 
 
-angular.module('fluro.video').directive('fluroVideo', ['$compile', 'Fluro', function($compile, Fluro) {
+angular.module('fluro.video').directive('fluroVideo', ['$compile', 'Fluro', 'FluroAsset', function($compile, Fluro, FluroAsset) {
 
     return {
         restrict: 'E',
@@ -21,6 +22,9 @@ angular.module('fluro.video').directive('fluroVideo', ['$compile', 'Fluro', func
             ngParams: '&',
         },
         link: function($scope, $element, $attrs) {
+
+
+
 
 
             $scope.$watch('model', function() {
@@ -41,6 +45,7 @@ angular.module('fluro.video').directive('fluroVideo', ['$compile', 'Fluro', func
                 }
 
 
+                $scope.poster = FluroAsset.posterUrl($scope.model._id, 1024, 768);
 
                 ///////////////////////////
 
@@ -67,7 +72,7 @@ angular.module('fluro.video').directive('fluroVideo', ['$compile', 'Fluro', func
                         }
 
 
-                        template = '<div class="embed-responsive embed-responsive-16by9"><video class="embed-responsive-item" controls><source ng-src="{{playUrl | trustfluro}}" type="{{model.mimetype}}"></video></div>';
+                        template = '<div class="embed-responsive embed-responsive-16by9"><video class="embed-responsive-item" poster="{{poster}}" controls><source ng-src="{{playUrl | trustfluro}}" type="{{model.mimetype}}"></video></div>';
                         break;
                 }
 
